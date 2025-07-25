@@ -9,7 +9,11 @@ interface UseFolderHistoryResult {
 	resetHistory: () => void
 }
 
-function useFolderHistory(initialPath: string | null): UseFolderHistoryResult {
+function useFolderHistory(
+	initialPath: string | null
+): UseFolderHistoryResult & {
+	setHistoryAndPath: (history: string[], path: string) => void
+} {
 	const [currentPath, setCurrentPath] = useState<string | null>(initialPath)
 	const [history, setHistory] = useState<string[]>([])
 
@@ -32,6 +36,11 @@ function useFolderHistory(initialPath: string | null): UseFolderHistoryResult {
 		setHistory([])
 	}
 
+	const setHistoryAndPath = (newHistory: string[], newPath: string) => {
+		setHistory(newHistory)
+		setCurrentPath(newPath)
+	}
+
 	return {
 		currentPath,
 		setCurrentPath,
@@ -39,6 +48,7 @@ function useFolderHistory(initialPath: string | null): UseFolderHistoryResult {
 		goToFolder,
 		goBack,
 		resetHistory,
+		setHistoryAndPath,
 	}
 }
 
