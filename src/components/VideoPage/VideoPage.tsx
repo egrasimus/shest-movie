@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react"
+import React, { useEffect, useRef, useState, useCallback } from "react"
 import styles from "./VideoPage.module.scss"
 import FolderContentGrid from "../FolderContentGrid/FolderContentGrid"
 import useFolderHistory from "../../hooks/useFolderHistory"
@@ -46,6 +46,20 @@ const VideoPage: React.FC = () => {
 		setFolderPath,
 		resetHistory
 	)
+
+	const onPlayFirstEpisode = useCallback(async (path: string) => {
+		// Если это видео — открыть
+		if (path.match(/\.(mp4|mkv|avi|mov|webm)$/i)) {
+			window.electronAPI.openExternalVideo(path)
+			return
+		}
+		// Если это папка — загрузить видео и открыть первое
+		const videos = await window.electronAPI.getVideos(path)
+		if (videos && videos.length > 0) {
+			const firstVideoPath = `${path}/${videos[0]}`
+			window.electronAPI.openExternalVideo(firstVideoPath)
+		}
+	}, [])
 
 	useEffect(() => {
 		window.electronAPI.onLastFolder((path: string) => {
@@ -166,7 +180,14 @@ const VideoPage: React.FC = () => {
 			{/* <h2>{folderPath ?? "Папка не выбрана"}</h2> */}
 			{folderPath && !loading && !error && (
 				<>
-					{movieData && <MoviePage movieData={movieData} path={folderPath} />}
+					{movieData && (
+						<MoviePage
+							movieData={movieData}
+							path={folderPath}
+							entries={entries}
+							onPlayFirstEpisode={onPlayFirstEpisode}
+						/>
+					)}
 					<FolderContentGrid
 						folderPath={folderPath}
 						onNavigateToFolder={goToFolder}

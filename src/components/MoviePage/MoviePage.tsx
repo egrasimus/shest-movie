@@ -10,12 +10,26 @@ interface MovieData {
 	Рейтинг?: string
 }
 
+interface FileEntry {
+	type: "video" | "folder"
+	name: string
+	fullPath: string
+	preview?: string
+}
+
 interface MoviePageProps {
 	movieData: MovieData
 	path: string
+	entries: FileEntry[]
+	onPlayFirstEpisode: (path: string) => void
 }
 
-const MoviePage: React.FC<MoviePageProps> = ({ movieData, path }) => {
+const MoviePage: React.FC<MoviePageProps> = ({
+	movieData,
+	path,
+	entries,
+	onPlayFirstEpisode,
+}) => {
 	const [preview, setPreview] = useState<string>()
 	const [isLoading, setIsLoading] = useState(true)
 
@@ -79,12 +93,27 @@ const MoviePage: React.FC<MoviePageProps> = ({ movieData, path }) => {
 								)}
 
 								{/* Play Button */}
-								{/* <button className={styles.playButton}>
+								<button
+									className={styles.playButton}
+									onClick={() => {
+										// Найти первый видеофайл (в текущей папке или первой подпапке)
+										const firstVideo = entries.find((e) => e.type === "video")
+										if (firstVideo) {
+											onPlayFirstEpisode(firstVideo.fullPath)
+											return
+										}
+										const firstFolder = entries.find((e) => e.type === "folder")
+										if (firstFolder) {
+											// Здесь можно реализовать рекурсивный поиск, но для простоты — открыть первую папку
+											onPlayFirstEpisode(firstFolder.fullPath)
+										}
+									}}
+								>
 									<div className={styles.playButtonContent}>
 										<div className={styles.playIcon}></div>
 										Смотреть с 1 эпизода
 									</div>
-								</button> */}
+								</button>
 							</div>
 						</div>
 
