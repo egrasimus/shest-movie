@@ -7,6 +7,10 @@ import MoviePage from "../MoviePage/MoviePage"
 
 interface Props {
 	folderPath: string
+	videos: string[]
+	subfolders: string[]
+	loading: boolean
+	error: string | null
 	onNavigateToFolder: (path: string) => void
 }
 
@@ -19,16 +23,19 @@ interface FileEntry {
 
 const FolderContentGrid: React.FC<Props> = ({
 	folderPath,
+	videos,
+	subfolders,
+	loading,
+	error,
 	onNavigateToFolder,
 }) => {
-	const [entries, setEntries] = useState<FileEntry[]>([])
 	const [selectedVideo, setSelectedVideo] = useState<{
 		name: string
 		path: string
 		url: string
 	} | null>(null)
-
 	const [movieData, setMovieData] = useState<any>(null)
+	const [entries, setEntries] = useState<FileEntry[]>([])
 
 	// Загружаем Markdown файл (если есть)
 	useEffect(() => {
@@ -50,67 +57,65 @@ const FolderContentGrid: React.FC<Props> = ({
 		loadMarkdown()
 	}, [folderPath])
 
-	// Загружаем видеофайлы и подпапки (с превью)
+	// Формируем entries на основе videos и subfolders с превью
 	useEffect(() => {
-		const loadContent = async () => {
-			try {
-				const [videoFiles, subfolders] = await Promise.all([
-					window.electronAPI.getVideos(folderPath),
-					window.electronAPI.getSubfolders(folderPath),
-				])
-
-				const videoEntries: FileEntry[] = await Promise.all(
-					videoFiles.map(async (file: string) => {
-						const fullPath = `${folderPath}/${file}`
-						let previewPath: string | undefined = undefined
-						try {
-							console.log({ fullPath })
-							previewPath = await window.electronAPI.getPreview(fullPath)
-							console.log({ previewPath })
-						} catch (e) {
-							console.error("Ошибка получения превью:", e)
+		let isMounted = true
+		const loadPreviews = async () => {
+			const folderEntries: FileEntry[] = await Promise.all(
+				subfolders.map(async (name) => {
+					const fullPath = `${folderPath}/${name}`
+					let preview: string | undefined
+					try {
+						preview = await window.electronAPI.getFolderPreview(fullPath)
+					} catch (e) {
+						preview = undefined
+					}
+					return {
+						type: "folder" as const,
+						name,
+						fullPath,
+						preview,
+					}
+				})
+			)
+			const videoEntries: FileEntry[] = await Promise.all(
+				videos.map(async (file) => {
+					const fullPath = `${folderPath}/${file}`
+					let preview: string | undefined
+					try {
+						const previewPath = await window.electronAPI.getPreview(fullPath)
+						preview = previewPath
+						if (previewPath) {
+							preview = await window.electronAPI.loadPreview(previewPath)
 						}
-						return {
-							type: "video",
-							name: file,
-							fullPath,
-							preview: previewPath
-								? await window.electronAPI.loadPreview(previewPath)
-								: undefined,
-						}
-					})
-				)
-
-				const folderEntries: FileEntry[] = await Promise.all(
-					subfolders.map(async (name: string) => {
-						const fullPath = `${folderPath}/${name}`
-						let preview: string | undefined
-						try {
-							preview = await window.electronAPI.getFolderPreview(fullPath)
-						} catch (e) {
-							console.error("Не удалось загрузить превью папки", e)
-						}
-						return {
-							type: "folder",
-							name,
-							fullPath,
-							preview,
-						}
-					})
-				)
-
-				setEntries([...folderEntries, ...videoEntries])
-			} catch (err) {
-				console.error("Ошибка загрузки содержимого папки:", err)
-				setEntries([])
-			}
+					} catch (e) {
+						preview = undefined
+					}
+					return {
+						type: "video" as const,
+						name: file,
+						fullPath,
+						preview,
+					}
+				})
+			)
+			if (isMounted) setEntries([...folderEntries, ...videoEntries])
 		}
-
-		loadContent()
-	}, [folderPath])
+		loadPreviews()
+		return () => {
+			isMounted = false
+		}
+	}, [videos, subfolders, folderPath])
 
 	const handleClosePlayer = () => {
 		setSelectedVideo(null)
+	}
+
+	if (loading) {
+		return <div>Загрузка...</div>
+	}
+	if (error) {
+		return <div style={{ color: "red" }}>{error}</div>
 	}
 
 	return (

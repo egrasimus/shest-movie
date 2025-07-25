@@ -1,7 +1,12 @@
-import React, { useState, useEffect } from "react"
+import React, { useEffect } from "react"
 import styles from "./VideoPage.module.scss"
 import FolderContentGrid from "../FolderContentGrid/FolderContentGrid"
 import useFolderHistory from "../../hooks/useFolderHistory"
+import useFolderContent from "../../hooks/useFolderContent"
+import {
+	createOpenFolderDialogHandler,
+	createGoBackHandler,
+} from "../../handlers/videoPageHandlers"
 
 const VideoPage: React.FC = () => {
 	const {
@@ -12,36 +17,15 @@ const VideoPage: React.FC = () => {
 		goBack,
 		resetHistory,
 	} = useFolderHistory(null)
-	const [, setVideos] = useState<string[]>([])
-	const [, setSubfolders] = useState<string[]>([])
 
-	// Выбор новой папки из диалога
-	const openFolderDialog = async () => {
-		const selected = await window.electronAPI.selectFolder()
-		console.log("sad")
-		if (selected) {
-			setFolderPath(selected)
-			resetHistory() // Очистить историю при новом выборе
-		}
-	}
+	const { videos, subfolders, loading, error } = useFolderContent(folderPath)
 
-	// Получение содержимого при смене папки
-	useEffect(() => {
-		if (!folderPath) {
-			setVideos([])
-			setSubfolders([])
-			return
-		}
+	const openFolderDialog = createOpenFolderDialogHandler(
+		setFolderPath,
+		resetHistory
+	)
+	const goBackHandler = createGoBackHandler(goBack, history)
 
-		// Логирование для отладки
-		console.log("Загружаем содержимое папки:", folderPath)
-
-		// Получаем видео и папки из текущей папки
-		window.electronAPI.getVideos(folderPath).then(setVideos)
-		window.electronAPI.getSubfolders(folderPath).then(setSubfolders)
-	}, [folderPath])
-
-	// Получение содержимого при смене папки
 	useEffect(() => {
 		window.electronAPI.onLastFolder((path) => {
 			setFolderPath(path)
@@ -53,7 +37,7 @@ const VideoPage: React.FC = () => {
 			<div className={styles.controls}>
 				<button
 					className={styles.backButton}
-					onClick={goBack}
+					onClick={goBackHandler}
 					disabled={history.length === 0}
 				>
 					← Назад
@@ -68,6 +52,10 @@ const VideoPage: React.FC = () => {
 				<FolderContentGrid
 					folderPath={folderPath}
 					onNavigateToFolder={goToFolder}
+					videos={videos}
+					subfolders={subfolders}
+					loading={loading}
+					error={error}
 				/>
 			)}
 		</div>
