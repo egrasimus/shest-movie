@@ -1,0 +1,55 @@
+html {
+	background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+	min-height: 100vh;
+	font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+		sans-serif;
+}
+
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+
+/* 2. Наследуем шрифты */
+body,
+input,
+button,
+textarea,
+select {
+	font: inherit;
+}
+
+/* 3. Убираем границы у кнопок и ссылок */
+button,
+input,
+select,
+textarea {
+	border: none;
+	background: none;
+	outline: none;
+}
+
+/* 4. Убираем оформление ссылок */
+a {
+	color: inherit;
+	text-decoration: none;
+}
+
+/* 5. Убираем список у ul/ol */
+ul,
+ol {
+	list-style: none;
+}
+
+/* 6. Убираем курсив у address/dfn/em/italic и т.п., если не нужно */
+em,
+i {
+	font-style: normal;
+}
+
+/* 7. Убираем особенности у таблиц */
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
