@@ -1,6 +1,5 @@
-import React, { useState } from "react"
+import React from "react"
 import styles from "./FolderContentGrid.module.scss"
-import VideoPlayer from "../VideoPlayer/VideoPlayer"
 import VideoCard from "./VideoCard"
 import FolderCard from "./FolderCard"
 
@@ -25,16 +24,6 @@ const FolderContentGrid: React.FC<Props> = ({
 	error,
 	onNavigateToFolder,
 }) => {
-	const [selectedVideo, setSelectedVideo] = useState<{
-		name: string
-		path: string
-		url: string
-	} | null>(null)
-
-	const handleClosePlayer = () => {
-		setSelectedVideo(null)
-	}
-
 	if (loading) {
 		return <div>Загрузка...</div>
 	}
@@ -44,13 +33,6 @@ const FolderContentGrid: React.FC<Props> = ({
 
 	return (
 		<div className={styles.grid}>
-			{selectedVideo && (
-				<VideoPlayer
-					src={selectedVideo.url}
-					videoPath={selectedVideo.path}
-					onClose={handleClosePlayer}
-				/>
-			)}
 			{entries.map((entry) => (
 				<React.Fragment key={entry.fullPath}>
 					{entry.type === "folder" ? (

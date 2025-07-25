@@ -1,15 +1,17 @@
 import React, { useEffect, useState } from "react"
 import styles from "./MoviePage.module.scss"
 
+interface MovieData {
+	aliases: string[]
+	coverUrl: string
+	description: string
+	Жанр?: string
+	Год?: string
+	Рейтинг?: string
+}
+
 interface MoviePageProps {
-	movieData: {
-		aliases: string[]
-		coverUrl: string
-		description: string
-		Жанр?: string
-		Год?: string
-		Рейтинг?: string
-	}
+	movieData: MovieData
 	path: string
 }
 
@@ -20,7 +22,6 @@ const MoviePage: React.FC<MoviePageProps> = ({ movieData, path }) => {
 	useEffect(() => {
 		const loadContent = async () => {
 			try {
-				// Simulating the electron API call
 				setPreview(await window.electronAPI.getFolderPreview(path))
 				// setPreview(movieData.coverUrl)
 			} catch (error) {
