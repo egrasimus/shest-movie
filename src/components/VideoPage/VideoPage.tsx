@@ -49,58 +49,57 @@ const VideoPage: React.FC = () => {
 
 	return (
 		<div className={styles.container}>
-			<div className={styles.controls}>
-				<button
-					className={styles.backButton}
-					onClick={goBackHandler}
-					disabled={history.length === 0}
-				>
-					← Назад
-				</button>
-				<button className={styles.selectButton} onClick={openFolderDialog}>
-					Выбрать папку
-				</button>
-			</div>
-
 			{/* Breadcrumbs */}
-			{folderPath && (
-				<nav className={styles.breadcrumbs} aria-label='Breadcrumbs'>
-					{(() => {
-						const crumbs = getBreadcrumbs(history, folderPath)
-						return (
-							<>
-								{crumbs.map((crumb, idx) => (
-									<span key={crumb.fullPath}>
-										{!crumb.isLast ? (
-											<a
-												href='#'
-												onClick={(e) => {
-													e.preventDefault()
-													const newHistory = crumbs
-														.slice(0, idx)
-														.map((c) => c.fullPath)
-													const newPath = crumb.fullPath
-													setHistoryAndPath(newHistory, newPath)
-												}}
-												className={styles.breadcrumbLink}
-											>
-												{crumb.label}
-											</a>
-										) : (
-											<span className={styles.breadcrumbCurrent}>
-												{crumb.label}
+
+			<div className={styles.breadcrumbsContainer}>
+				<div className={styles.breadcrumbsWrapper}>
+					{folderPath ? (
+						<nav className={styles.breadcrumbs} aria-label='Breadcrumbs'>
+							{(() => {
+								const crumbs = getBreadcrumbs(history, folderPath)
+								return (
+									<>
+										{crumbs.map((crumb, idx) => (
+											<span key={crumb.fullPath}>
+												{!crumb.isLast ? (
+													<a
+														href='#'
+														onClick={(e) => {
+															e.preventDefault()
+															const newHistory = crumbs
+																.slice(0, idx)
+																.map((c) => c.fullPath)
+															const newPath = crumb.fullPath
+															setHistoryAndPath(newHistory, newPath)
+														}}
+														className={styles.breadcrumbLink}
+													>
+														{crumb.label}
+													</a>
+												) : (
+													<span className={styles.breadcrumbCurrent}>
+														{crumb.label}
+													</span>
+												)}
+												{idx < crumbs.length - 1 && (
+													<span className={styles.breadcrumbSep}> / </span>
+												)}
 											</span>
-										)}
-										{idx < crumbs.length - 1 && (
-											<span className={styles.breadcrumbSep}> / </span>
-										)}
-									</span>
-								))}
-							</>
-						)
-					})()}
-				</nav>
-			)}
+										))}
+									</>
+								)
+							})()}
+						</nav>
+					) : (
+						<div></div>
+					)}
+					<div className={styles.controls}>
+						<button className={styles.selectButton} onClick={openFolderDialog}>
+							Выбрать папку
+						</button>
+					</div>
+				</div>
+			</div>
 
 			{loading && <div className={styles.loader}>Загрузка...</div>}
 			{error && <div className={styles.error}>Ошибка загрузки: {error}</div>}
