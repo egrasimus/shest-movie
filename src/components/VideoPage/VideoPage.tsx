@@ -1,10 +1,17 @@
 import React, { useState, useEffect } from "react"
 import styles from "./VideoPage.module.scss"
 import FolderContentGrid from "../FolderContentGrid/FolderContentGrid"
+import useFolderHistory from "../../hooks/useFolderHistory"
 
 const VideoPage: React.FC = () => {
-	const [folderPath, setFolderPath] = useState<string | null>(null)
-	const [history, setHistory] = useState<string[]>([])
+	const {
+		currentPath: folderPath,
+		setCurrentPath: setFolderPath,
+		history,
+		goToFolder,
+		goBack,
+		resetHistory,
+	} = useFolderHistory(null)
 	const [, setVideos] = useState<string[]>([])
 	const [, setSubfolders] = useState<string[]>([])
 
@@ -14,7 +21,7 @@ const VideoPage: React.FC = () => {
 		console.log("sad")
 		if (selected) {
 			setFolderPath(selected)
-			setHistory([]) // Очистить историю при новом выборе
+			resetHistory() // Очистить историю при новом выборе
 		}
 	}
 
@@ -40,23 +47,6 @@ const VideoPage: React.FC = () => {
 			setFolderPath(path)
 		})
 	}, [])
-
-	// Переход в подпапку
-	const goToFolder = (newPath: string) => {
-		if (folderPath) {
-			setHistory((prev) => [...prev, folderPath])
-		}
-		setFolderPath(newPath)
-	}
-
-	// Назад
-	const goBack = () => {
-		if (history.length > 0) {
-			const prevPath = history[history.length - 1]
-			setHistory((prev) => prev.slice(0, -1))
-			setFolderPath(prevPath)
-		}
-	}
 
 	return (
 		<div className={styles.container}>
