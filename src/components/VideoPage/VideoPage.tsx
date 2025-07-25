@@ -6,6 +6,7 @@ import useFolderContent from "../../hooks/useFolderContent"
 import { createOpenFolderDialogHandler } from "../../handlers/videoPageHandlers"
 import { useMovieData } from "../../hooks/useMovieData"
 import MoviePage from "../MoviePage/MoviePage"
+import BreadcrumbsBar from "./BreadcrumbsBar"
 
 // Вспомогательная функция для построения массива путей для breadcrumbs
 function getBreadcrumbs(history: string[], current: string | null) {
@@ -122,57 +123,28 @@ const VideoPage: React.FC = () => {
 
 	return (
 		<div className={styles.container}>
-			{/* Breadcrumbs */}
+			{folderPath && (
+				<BreadcrumbsBar
+					folderPath={folderPath}
+					history={history}
+					setHistoryAndPath={setHistoryAndPath}
+					openFolderDialog={openFolderDialog}
+					styles={styles}
+				/>
+			)}
 
-			<div className={styles.breadcrumbsContainer}>
-				<div className={styles.breadcrumbsWrapper}>
-					{folderPath ? (
-						<nav className={styles.breadcrumbs} aria-label='Breadcrumbs'>
-							{(() => {
-								const crumbs = getBreadcrumbs(history, folderPath)
-								return (
-									<>
-										{crumbs.map((crumb, idx) => (
-											<span key={crumb.fullPath}>
-												{!crumb.isLast ? (
-													<a
-														href='#'
-														onClick={(e) => {
-															e.preventDefault()
-															const newHistory = crumbs
-																.slice(0, idx)
-																.map((c) => c.fullPath)
-															const newPath = crumb.fullPath
-															setHistoryAndPath(newHistory, newPath)
-														}}
-														className={styles.breadcrumbLink}
-													>
-														{crumb.label}
-													</a>
-												) : (
-													<span className={styles.breadcrumbCurrent}>
-														{crumb.label}
-													</span>
-												)}
-												{idx < crumbs.length - 1 && (
-													<span className={styles.breadcrumbSep}> / </span>
-												)}
-											</span>
-										))}
-									</>
-								)
-							})()}
-						</nav>
-					) : (
-						<div></div>
-					)}
-					<div className={styles.controls}>
-						<button className={styles.selectButton} onClick={openFolderDialog}>
-							Выбрать папку
-						</button>
-					</div>
+			{!folderPath && (
+				<div className={styles.placeholderBox}>
+					<div className={styles.placeholderIcon}>📁</div>
+					<h2 className={styles.placeholderTitle}>Папка не выбрана</h2>
+					<p className={styles.placeholderText}>
+						Выберите папку с видео, чтобы начать просмотр.
+					</p>
+					<button className={styles.selectButton} onClick={openFolderDialog}>
+						Выбрать папку
+					</button>
 				</div>
-			</div>
+			)}
 
 			{loading && <div className={styles.loader}>Загрузка...</div>}
 			{error && <div className={styles.error}>Ошибка загрузки: {error}</div>}
