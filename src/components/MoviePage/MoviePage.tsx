@@ -178,64 +178,6 @@ const MoviePage: React.FC<MoviePageProps> = ({
 										{movieData.description || "Описание отсутствует"}
 									</p>
 								</div>
-
-								{/* Additional Actions */}
-								{/* <div className={styles.actionsGrid}>
-									<button className={styles.actionButton}>
-										<div className={styles.actionButtonContent}>
-											<svg
-												className={styles.actionIcon}
-												fill='none'
-												stroke='currentColor'
-												viewBox='0 0 24 24'
-											>
-												<path
-													strokeLinecap='round'
-													strokeLinejoin='round'
-													strokeWidth={2}
-													d='M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z'
-												/>
-											</svg>
-											В избранное
-										</div>
-									</button>
-									<button className={styles.actionButton}>
-										<div className={styles.actionButtonContent}>
-											<svg
-												className={styles.actionIcon}
-												fill='none'
-												stroke='currentColor'
-												viewBox='0 0 24 24'
-											>
-												<path
-													strokeLinecap='round'
-													strokeLinejoin='round'
-													strokeWidth={2}
-													d='M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z'
-												/>
-											</svg>
-											Поделиться
-										</div>
-									</button>
-									<button className={styles.actionButton}>
-										<div className={styles.actionButtonContent}>
-											<svg
-												className={styles.actionIcon}
-												fill='none'
-												stroke='currentColor'
-												viewBox='0 0 24 24'
-											>
-												<path
-													strokeLinecap='round'
-													strokeLinejoin='round'
-													strokeWidth={2}
-													d='M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253'
-												/>
-											</svg>
-											Позже
-										</div>
-									</button>
-								</div> */}
 							</div>
 						</div>
 					</div>
