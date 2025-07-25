@@ -2,13 +2,11 @@ import React, { useEffect, useState } from "react"
 import styles from "./MoviePage.module.scss"
 
 interface MovieData {
-	type: "сериал" | "фильм"
+	type: string
 	aliases: string[]
 	coverUrl: string
 	description: string
-	Жанр?: string
-	Год?: string
-	Рейтинг?: string
+	[key: string]: any
 }
 
 interface FileEntry {
@@ -56,6 +54,24 @@ const MoviePage: React.FC<MoviePageProps> = ({
 
 	const playButtonText =
 		movieData.type === "сериал" ? "Смотреть с 1 серии" : "Смотреть"
+
+	// Универсальный infoGrid
+	const baseFields = [
+		"type",
+		"aliases",
+		"coverUrl",
+		"description",
+		"Название",
+		"Каталог",
+		"Статус",
+		"Рейтинг",
+	]
+	const infoFields = Object.entries(movieData)
+		.filter(
+			([key, value]) =>
+				!baseFields.includes(key) && value && typeof value !== "object"
+		)
+		.map(([key, value]) => ({ label: key, value }))
 
 	return (
 		<div className={styles.moviePage}>
@@ -134,32 +150,24 @@ const MoviePage: React.FC<MoviePageProps> = ({
 								<div className={styles.infoCard}>
 									<h2 className={styles.cardTitle}>Информация</h2>
 									<div className={styles.infoGrid}>
-										<div className={styles.infoColumn}>
+										{infoFields.length > 0 ? (
+											infoFields.map((f) => (
+												<div className={styles.infoItem} key={f.label}>
+													<span className={styles.infoLabel}>{f.label}: </span>
+													<span className={styles.infoValue}>
+														{typeof f.value === "string"
+															? f.value.replaceAll("[", "").replaceAll("]", "")
+															: f.value}
+													</span>
+												</div>
+											))
+										) : (
 											<div className={styles.infoItem}>
-												<span className={styles.infoLabel}>Жанр:</span>
-												<span className={styles.infoValue}>
-													{movieData["Жанр"] || "Не указан"}
+												<span className={styles.infoLabel}>
+													Информация отсутствует
 												</span>
 											</div>
-											<div className={styles.infoItem}>
-												<span className={styles.infoLabel}>Год:</span>
-												<span className={styles.infoValue}>
-													{movieData["Год"] || "Не указан"}
-												</span>
-											</div>
-										</div>
-										<div className={styles.infoColumn}>
-											<div className={styles.infoItem}>
-												<span className={styles.infoLabel}>Рейтинг:</span>
-												<span className={styles.infoValue}>
-													{movieData["Рейтинг"] || "Не указан"}
-												</span>
-											</div>
-											<div className={styles.infoItem}>
-												<span className={styles.infoLabel}>Сезон:</span>
-												<span className={styles.infoValue}>Весна</span>
-											</div>
-										</div>
+										)}
 									</div>
 								</div>
 
@@ -167,7 +175,7 @@ const MoviePage: React.FC<MoviePageProps> = ({
 								<div className={styles.descriptionCard}>
 									<h2 className={styles.cardTitle}>Описание</h2>
 									<p className={styles.description}>
-										{movieData.description || "Описание не доступно"}
+										{movieData.description || "Описание отсутствует"}
 									</p>
 								</div>
 

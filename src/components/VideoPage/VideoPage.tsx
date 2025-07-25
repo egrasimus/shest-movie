@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState, useCallback } from "react"
+import React, { useEffect, useState, useCallback } from "react"
 import styles from "./VideoPage.module.scss"
 import FolderContentGrid from "../FolderContentGrid/FolderContentGrid"
 import useFolderHistory from "../../hooks/useFolderHistory"
@@ -7,20 +7,6 @@ import { createOpenFolderDialogHandler } from "../../handlers/videoPageHandlers"
 import { useMovieData } from "../../hooks/useMovieData"
 import MoviePage from "../MoviePage/MoviePage"
 import BreadcrumbsBar from "./BreadcrumbsBar"
-
-// Вспомогательная функция для построения массива путей для breadcrumbs
-function getBreadcrumbs(history: string[], current: string | null) {
-	const all = [...history]
-	if (current) all.push(current)
-	return all.map((fullPath, idx) => {
-		const parts = fullPath.split(/[\\/]/).filter(Boolean)
-		return {
-			label: parts[parts.length - 1] || "Корень",
-			fullPath,
-			isLast: idx === all.length - 1,
-		}
-	})
-}
 
 interface FileEntry {
 	type: "video" | "folder"
@@ -149,7 +135,6 @@ const VideoPage: React.FC = () => {
 			{loading && <div className={styles.loader}>Загрузка...</div>}
 			{error && <div className={styles.error}>Ошибка загрузки: {error}</div>}
 
-			{/* <h2>{folderPath ?? "Папка не выбрана"}</h2> */}
 			{folderPath && !loading && !error && (
 				<>
 					{movieData && (
