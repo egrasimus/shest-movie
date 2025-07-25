@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react"
 import styles from "./FolderContentGrid.module.scss"
-import { FaFolder } from "react-icons/fa"
 import VideoPlayer from "../VideoPlayer/VideoPlayer"
 import matter from "gray-matter"
 import MoviePage from "../MoviePage/MoviePage"
+import VideoCard from "./VideoCard"
+import FolderCard from "./FolderCard"
 
 interface Props {
 	folderPath: string
@@ -130,47 +131,21 @@ const FolderContentGrid: React.FC<Props> = ({
 					/>
 				)}
 				{entries.map((entry) => (
-					<>
+					<React.Fragment key={entry.fullPath}>
 						{entry.type === "folder" ? (
-							<div
-								key={entry.fullPath}
-								className={styles.folderCard}
-								onClick={() => {
-									onNavigateToFolder(entry.fullPath)
-								}}
-								title={entry.name}
-							>
-								<div className={styles.folderPreview}>
-									{entry.preview ? (
-										<img
-											src={entry.preview}
-											alt='preview'
-											className={styles.folderPreview}
-										/>
-									) : (
-										<FaFolder size={64} />
-									)}
-								</div>
-								<div className={styles.name}>{entry.name}</div>
-							</div>
+							<FolderCard
+								entry={entry}
+								onClick={() => onNavigateToFolder(entry.fullPath)}
+							/>
 						) : (
-							<div
-								key={entry.fullPath}
-								className={styles.videoCard}
-								onClick={() => {
+							<VideoCard
+								entry={entry}
+								onClick={() =>
 									window.electronAPI.openExternalVideo(entry.fullPath)
-								}}
-								title={entry.name}
-							>
-								<img
-									src={entry.preview || "/images/video-placeholder.png"}
-									alt={entry.name}
-									className={styles.videoPreview}
-								/>
-								<div className={styles.name}>{entry.name.split(".")[0]}</div>
-							</div>
+								}
+							/>
 						)}
-					</>
+					</React.Fragment>
 				))}
 			</div>
 		</>
