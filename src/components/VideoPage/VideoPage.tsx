@@ -47,8 +47,11 @@ const VideoPage: React.FC = () => {
 				</button>
 			</div>
 
+			{loading && <div className={styles.loader}>Загрузка...</div>}
+			{error && <div className={styles.error}>Ошибка загрузки: {error}</div>}
+
 			{/* <h2>{folderPath ?? "Папка не выбрана"}</h2> */}
-			{folderPath && (
+			{folderPath && !loading && !error && (
 				<FolderContentGrid
 					folderPath={folderPath}
 					onNavigateToFolder={goToFolder}
