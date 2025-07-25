@@ -4,6 +4,8 @@ import FolderContentGrid from "../FolderContentGrid/FolderContentGrid"
 import useFolderHistory from "../../hooks/useFolderHistory"
 import useFolderContent from "../../hooks/useFolderContent"
 import { createOpenFolderDialogHandler } from "../../handlers/videoPageHandlers"
+import { useMovieData } from "../../hooks/useMovieData"
+import MoviePage from "../MoviePage/MoviePage"
 
 // Вспомогательная функция для построения массива путей для breadcrumbs
 function getBreadcrumbs(history: string[], current: string | null) {
@@ -19,6 +21,13 @@ function getBreadcrumbs(history: string[], current: string | null) {
 	})
 }
 
+interface FileEntry {
+	type: "video" | "folder"
+	name: string
+	fullPath: string
+	preview?: string
+}
+
 const VideoPage: React.FC = () => {
 	const {
 		currentPath: folderPath,
@@ -30,6 +39,8 @@ const VideoPage: React.FC = () => {
 	} = useFolderHistory(null)
 
 	const { videos, subfolders, loading, error } = useFolderContent(folderPath)
+	const { movieData } = useMovieData(folderPath || "")
+	const [entries, setEntries] = useState<FileEntry[]>([])
 
 	const openFolderDialog = createOpenFolderDialogHandler(
 		setFolderPath,
@@ -37,10 +48,63 @@ const VideoPage: React.FC = () => {
 	)
 
 	useEffect(() => {
-		window.electronAPI.onLastFolder((path) => {
+		window.electronAPI.onLastFolder((path: string) => {
 			setFolderPath(path)
 		})
 	}, [])
+
+	useEffect(() => {
+		let isMounted = true
+		const loadPreviews = async () => {
+			if (!folderPath) {
+				setEntries([])
+				return
+			}
+			const folderEntries: FileEntry[] = await Promise.all(
+				subfolders.map(async (name) => {
+					const fullPath = `${folderPath}/${name}`
+					let preview: string | undefined
+					try {
+						preview = await window.electronAPI.getFolderPreview(fullPath)
+					} catch (e) {
+						preview = undefined
+					}
+					return {
+						type: "folder" as const,
+						name,
+						fullPath,
+						preview,
+					}
+				})
+			)
+			const videoEntries: FileEntry[] = await Promise.all(
+				videos.map(async (file) => {
+					const fullPath = `${folderPath}/${file}`
+					let preview: string | undefined
+					try {
+						const previewPath = await window.electronAPI.getPreview(fullPath)
+						preview = previewPath
+						if (previewPath) {
+							preview = await window.electronAPI.loadPreview(previewPath)
+						}
+					} catch (e) {
+						preview = undefined
+					}
+					return {
+						type: "video" as const,
+						name: file,
+						fullPath,
+						preview,
+					}
+				})
+			)
+			if (isMounted) setEntries([...folderEntries, ...videoEntries])
+		}
+		loadPreviews()
+		return () => {
+			isMounted = false
+		}
+	}, [videos, subfolders, folderPath])
 
 	return (
 		<div className={styles.container}>
@@ -101,14 +165,16 @@ const VideoPage: React.FC = () => {
 
 			{/* <h2>{folderPath ?? "Папка не выбрана"}</h2> */}
 			{folderPath && !loading && !error && (
-				<FolderContentGrid
-					folderPath={folderPath}
-					onNavigateToFolder={goToFolder}
-					videos={videos}
-					subfolders={subfolders}
-					loading={loading}
-					error={error}
-				/>
+				<>
+					{movieData && <MoviePage movieData={movieData} path={folderPath} />}
+					<FolderContentGrid
+						folderPath={folderPath}
+						onNavigateToFolder={goToFolder}
+						entries={entries}
+						loading={loading}
+						error={error}
+					/>
+				</>
 			)}
 		</div>
 	)

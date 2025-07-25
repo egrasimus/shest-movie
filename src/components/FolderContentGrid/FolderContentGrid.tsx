@@ -1,16 +1,12 @@
-import React, { useEffect, useState } from "react"
+import React, { useState } from "react"
 import styles from "./FolderContentGrid.module.scss"
 import VideoPlayer from "../VideoPlayer/VideoPlayer"
-import matter from "gray-matter"
-import MoviePage from "../MoviePage/MoviePage"
 import VideoCard from "./VideoCard"
 import FolderCard from "./FolderCard"
-import { useMovieData } from "../../hooks/useMovieData"
 
 interface Props {
 	folderPath: string
-	videos: string[]
-	subfolders: string[]
+	entries: FileEntry[]
 	loading: boolean
 	error: string | null
 	onNavigateToFolder: (path: string) => void
@@ -24,9 +20,7 @@ interface FileEntry {
 }
 
 const FolderContentGrid: React.FC<Props> = ({
-	folderPath,
-	videos,
-	subfolders,
+	entries,
 	loading,
 	error,
 	onNavigateToFolder,
@@ -36,58 +30,6 @@ const FolderContentGrid: React.FC<Props> = ({
 		path: string
 		url: string
 	} | null>(null)
-	const { movieData } = useMovieData(folderPath)
-	const [entries, setEntries] = useState<FileEntry[]>([])
-
-	// Формируем entries на основе videos и subfolders с превью
-	useEffect(() => {
-		let isMounted = true
-		const loadPreviews = async () => {
-			const folderEntries: FileEntry[] = await Promise.all(
-				subfolders.map(async (name) => {
-					const fullPath = `${folderPath}/${name}`
-					let preview: string | undefined
-					try {
-						preview = await window.electronAPI.getFolderPreview(fullPath)
-					} catch (e) {
-						preview = undefined
-					}
-					return {
-						type: "folder" as const,
-						name,
-						fullPath,
-						preview,
-					}
-				})
-			)
-			const videoEntries: FileEntry[] = await Promise.all(
-				videos.map(async (file) => {
-					const fullPath = `${folderPath}/${file}`
-					let preview: string | undefined
-					try {
-						const previewPath = await window.electronAPI.getPreview(fullPath)
-						preview = previewPath
-						if (previewPath) {
-							preview = await window.electronAPI.loadPreview(previewPath)
-						}
-					} catch (e) {
-						preview = undefined
-					}
-					return {
-						type: "video" as const,
-						name: file,
-						fullPath,
-						preview,
-					}
-				})
-			)
-			if (isMounted) setEntries([...folderEntries, ...videoEntries])
-		}
-		loadPreviews()
-		return () => {
-			isMounted = false
-		}
-	}, [videos, subfolders, folderPath])
 
 	const handleClosePlayer = () => {
 		setSelectedVideo(null)
@@ -101,35 +43,32 @@ const FolderContentGrid: React.FC<Props> = ({
 	}
 
 	return (
-		<>
-			{movieData && <MoviePage movieData={movieData} path={folderPath} />}
-			<div className={styles.grid}>
-				{selectedVideo && (
-					<VideoPlayer
-						src={selectedVideo.url}
-						videoPath={selectedVideo.path}
-						onClose={handleClosePlayer}
-					/>
-				)}
-				{entries.map((entry) => (
-					<React.Fragment key={entry.fullPath}>
-						{entry.type === "folder" ? (
-							<FolderCard
-								entry={entry}
-								onClick={() => onNavigateToFolder(entry.fullPath)}
-							/>
-						) : (
-							<VideoCard
-								entry={entry}
-								onClick={() =>
-									window.electronAPI.openExternalVideo(entry.fullPath)
-								}
-							/>
-						)}
-					</React.Fragment>
-				))}
-			</div>
-		</>
+		<div className={styles.grid}>
+			{selectedVideo && (
+				<VideoPlayer
+					src={selectedVideo.url}
+					videoPath={selectedVideo.path}
+					onClose={handleClosePlayer}
+				/>
+			)}
+			{entries.map((entry) => (
+				<React.Fragment key={entry.fullPath}>
+					{entry.type === "folder" ? (
+						<FolderCard
+							entry={entry}
+							onClick={() => onNavigateToFolder(entry.fullPath)}
+						/>
+					) : (
+						<VideoCard
+							entry={entry}
+							onClick={() =>
+								window.electronAPI.openExternalVideo(entry.fullPath)
+							}
+						/>
+					)}
+				</React.Fragment>
+			))}
+		</div>
 	)
 }
 
