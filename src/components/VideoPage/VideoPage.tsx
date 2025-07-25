@@ -3,10 +3,7 @@ import styles from "./VideoPage.module.scss"
 import FolderContentGrid from "../FolderContentGrid/FolderContentGrid"
 import useFolderHistory from "../../hooks/useFolderHistory"
 import useFolderContent from "../../hooks/useFolderContent"
-import {
-	createOpenFolderDialogHandler,
-	createGoBackHandler,
-} from "../../handlers/videoPageHandlers"
+import { createOpenFolderDialogHandler } from "../../handlers/videoPageHandlers"
 
 // Вспомогательная функция для построения массива путей для breadcrumbs
 function getBreadcrumbs(history: string[], current: string | null) {
@@ -28,7 +25,6 @@ const VideoPage: React.FC = () => {
 		setCurrentPath: setFolderPath,
 		history,
 		goToFolder,
-		goBack,
 		resetHistory,
 		setHistoryAndPath,
 	} = useFolderHistory(null)
@@ -39,7 +35,6 @@ const VideoPage: React.FC = () => {
 		setFolderPath,
 		resetHistory
 	)
-	const goBackHandler = createGoBackHandler(goBack, history)
 
 	useEffect(() => {
 		window.electronAPI.onLastFolder((path) => {

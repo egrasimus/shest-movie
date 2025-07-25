@@ -5,7 +5,6 @@ interface UseFolderHistoryResult {
 	setCurrentPath: (path: string | null) => void
 	history: string[]
 	goToFolder: (newPath: string) => void
-	goBack: () => void
 	resetHistory: () => void
 }
 
@@ -24,14 +23,6 @@ function useFolderHistory(
 		setCurrentPath(newPath)
 	}
 
-	const goBack = () => {
-		if (history.length > 0) {
-			const prevPath = history[history.length - 1]
-			setHistory((prev) => prev.slice(0, -1))
-			setCurrentPath(prevPath)
-		}
-	}
-
 	const resetHistory = () => {
 		setHistory([])
 	}
@@ -46,7 +37,6 @@ function useFolderHistory(
 		setCurrentPath,
 		history,
 		goToFolder,
-		goBack,
 		resetHistory,
 		setHistoryAndPath,
 	}

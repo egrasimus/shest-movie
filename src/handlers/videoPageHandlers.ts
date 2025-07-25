@@ -10,11 +10,3 @@ export function createOpenFolderDialogHandler(
 		}
 	}
 }
-
-export function createGoBackHandler(goBack: () => void, history: string[]) {
-	return () => {
-		if (history.length > 0) {
-			goBack()
-		}
-	}
-}

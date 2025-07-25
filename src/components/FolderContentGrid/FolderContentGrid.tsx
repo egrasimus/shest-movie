@@ -5,6 +5,7 @@ import matter from "gray-matter"
 import MoviePage from "../MoviePage/MoviePage"
 import VideoCard from "./VideoCard"
 import FolderCard from "./FolderCard"
+import { useMovieData } from "../../hooks/useMovieData"
 
 interface Props {
 	folderPath: string
@@ -35,28 +36,8 @@ const FolderContentGrid: React.FC<Props> = ({
 		path: string
 		url: string
 	} | null>(null)
-	const [movieData, setMovieData] = useState<any>(null)
+	const { movieData } = useMovieData(folderPath)
 	const [entries, setEntries] = useState<FileEntry[]>([])
-
-	// Загружаем Markdown файл (если есть)
-	useEffect(() => {
-		const loadMarkdown = async () => {
-			try {
-				const mdContent = await window.electronAPI.getMarkdown(folderPath)
-				if (mdContent) {
-					const parsed = matter(mdContent)
-					console.log("Parsed markdown front matter:", parsed.data)
-					setMovieData(parsed.data)
-				} else {
-					setMovieData(null)
-				}
-			} catch (e) {
-				console.error("Ошибка при загрузке markdown:", e)
-				setMovieData(null)
-			}
-		}
-		loadMarkdown()
-	}, [folderPath])
 
 	// Формируем entries на основе videos и subfolders с превью
 	useEffect(() => {
