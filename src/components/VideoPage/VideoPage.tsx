@@ -188,13 +188,15 @@ const VideoPage: React.FC = () => {
 							onPlayFirstEpisode={onPlayFirstEpisode}
 						/>
 					)}
-					<FolderContentGrid
-						folderPath={folderPath}
-						onNavigateToFolder={goToFolder}
-						entries={entries}
-						loading={loading}
-						error={error}
-					/>
+					{(!movieData || movieData.type !== "фильм") && (
+						<FolderContentGrid
+							folderPath={folderPath}
+							onNavigateToFolder={goToFolder}
+							entries={entries}
+							loading={loading}
+							error={error}
+						/>
+					)}
 				</>
 			)}
 		</div>

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react"
 import styles from "./MoviePage.module.scss"
 
 interface MovieData {
+	type: "сериал" | "фильм"
 	aliases: string[]
 	coverUrl: string
 	description: string
@@ -33,6 +34,8 @@ const MoviePage: React.FC<MoviePageProps> = ({
 	const [preview, setPreview] = useState<string>()
 	const [isLoading, setIsLoading] = useState(true)
 
+	console.log({ movieData })
+
 	useEffect(() => {
 		const loadContent = async () => {
 			try {
@@ -50,6 +53,9 @@ const MoviePage: React.FC<MoviePageProps> = ({
 	const handleImageLoad = () => {
 		setIsLoading(false)
 	}
+
+	const playButtonText =
+		movieData.type === "сериал" ? "Смотреть с 1 серии" : "Смотреть"
 
 	return (
 		<div className={styles.moviePage}>
@@ -102,16 +108,20 @@ const MoviePage: React.FC<MoviePageProps> = ({
 											onPlayFirstEpisode(firstVideo.fullPath)
 											return
 										}
-										const firstFolder = entries.find((e) => e.type === "folder")
-										if (firstFolder) {
-											// Здесь можно реализовать рекурсивный поиск, но для простоты — открыть первую папку
-											onPlayFirstEpisode(firstFolder.fullPath)
+										if (movieData.type === "сериал") {
+											const firstFolder = entries.find(
+												(e) => e.type === "folder"
+											)
+											if (firstFolder) {
+												// Здесь можно реализовать рекурсивный поиск, но для простоты — открыть первую папку
+												onPlayFirstEpisode(firstFolder.fullPath)
+											}
 										}
 									}}
 								>
 									<div className={styles.playButtonContent}>
 										<div className={styles.playIcon}></div>
-										Смотреть с 1 эпизода
+										{playButtonText}
 									</div>
 								</button>
 							</div>
