@@ -31,7 +31,7 @@ function useFolderContent(folderPath: string | null): UseFolderContentResult {
 				setVideos(videos)
 				setSubfolders(subfolders)
 			})
-			.catch((err) => {
+			.catch(() => {
 				setError("Ошибка загрузки содержимого папки")
 				setVideos([])
 				setSubfolders([])

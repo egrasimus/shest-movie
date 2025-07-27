@@ -25,7 +25,7 @@ export function useMovieData(folderPath: string) {
 					setMovieData(null)
 				}
 			})
-			.catch((e: any) => {
+			.catch(() => {
 				setError("Ошибка при загрузке markdown")
 				setMovieData(null)
 			})

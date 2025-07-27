@@ -11,7 +11,9 @@
 		"preview": "vite preview",
 		"electron": "electron .",
 		"start": "concurrently \"npm run dev\" \"npm run electron\"",
-		"electron:build": "vite build && electron-builder"
+		"electron:build": "vite build && electron-builder",
+		"build:mac": "electron-builder --mac",
+		"build:win": "electron-builder --win"
 	},
 	"dependencies": {
 		"@ffmpeg-installer/ffmpeg": "^1.1.0",
@@ -55,11 +57,26 @@
 			"package.json"
 		],
 		"directories": {
-			"buildResources": "assets"
+			"buildResources": "src/assets/icons"
 		},
 		"asarUnpack": [
 			"**/ffmpeg.exe",
 			"**/ffprobe.exe"
-		]
+		],
+		"mac": {
+			"target": [
+				"dmg",
+				"zip"
+			],
+			"category": "public.app-category.video",
+			"icon": "src/assets/icons/icon.png"
+		},
+		"win": {
+			"target": [
+				"nsis",
+				"zip"
+			],
+			"icon": "src/assets/icons/icon.png"
+		}
 	}
 }
