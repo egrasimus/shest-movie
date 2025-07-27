@@ -1,12 +1,19 @@
 import React from "react"
-import VideoPage from "./components/VideoPage/VideoPage"
-import { Buffer } from "buffer"
 import "./App.css"
+import VideoPage from "./components/VideoPage/VideoPage"
+import ErrorBoundary from "./components/ErrorBoundary/ErrorBoundary"
+import { Buffer } from "buffer"
 
-const App: React.FC = () => {
+function App() {
 	window.Buffer = Buffer
 
-	return <VideoPage />
+	return (
+		<ErrorBoundary>
+			<div className='App'>
+				<VideoPage />
+			</div>
+		</ErrorBoundary>
+	)
 }
 
 export default App

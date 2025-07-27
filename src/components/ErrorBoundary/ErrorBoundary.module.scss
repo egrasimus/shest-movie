@@ -1,0 +1,131 @@
+.errorContainer {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	min-height: 100vh;
+	background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+	padding: 20px;
+}
+
+.errorContent {
+	background: rgba(30, 41, 59, 0.8);
+	border: 1px solid rgba(255, 255, 255, 0.1);
+	border-radius: 16px;
+	padding: 40px;
+	text-align: center;
+	max-width: 500px;
+	width: 100%;
+	backdrop-filter: blur(10px);
+	box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+.errorIcon {
+	font-size: 64px;
+	margin-bottom: 20px;
+	filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+}
+
+.errorTitle {
+	color: #f8fafc;
+	font-size: 28px;
+	font-weight: 600;
+	margin: 0 0 16px 0;
+	text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.errorMessage {
+	color: #cbd5e1;
+	font-size: 16px;
+	line-height: 1.6;
+	margin: 0 0 32px 0;
+}
+
+.errorDetails {
+	margin: 24px 0;
+	text-align: left;
+
+	summary {
+		color: #94a3b8;
+		cursor: pointer;
+		font-size: 14px;
+		font-weight: 500;
+		margin-bottom: 12px;
+
+		&:hover {
+			color: #cbd5e1;
+		}
+	}
+}
+
+.errorStack {
+	background: rgba(15, 23, 42, 0.8);
+	border: 1px solid rgba(255, 255, 255, 0.1);
+	border-radius: 8px;
+	color: #e2e8f0;
+	font-family: "Monaco", "Menlo", "Ubuntu Mono", monospace;
+	font-size: 12px;
+	line-height: 1.4;
+	max-height: 200px;
+	overflow: auto;
+	padding: 16px;
+	text-align: left;
+	white-space: pre-wrap;
+}
+
+.errorActions {
+	display: flex;
+	gap: 16px;
+	justify-content: center;
+	flex-wrap: wrap;
+}
+
+.reloadButton,
+.homeButton {
+	background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+	border: none;
+	border-radius: 8px;
+	color: white;
+	cursor: pointer;
+	font-size: 14px;
+	font-weight: 500;
+	padding: 12px 24px;
+	transition: all 0.2s ease;
+
+	&:hover {
+		background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
+		transform: translateY(-1px);
+		box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+	}
+
+	&:active {
+		transform: translateY(0);
+	}
+}
+
+.homeButton {
+	background: linear-gradient(135deg, #64748b 0%, #475569 100%);
+
+	&:hover {
+		background: linear-gradient(135deg, #475569 0%, #334155 100%);
+		box-shadow: 0 4px 12px rgba(100, 116, 139, 0.3);
+	}
+}
+
+@media (max-width: 600px) {
+	.errorContent {
+		padding: 24px;
+	}
+
+	.errorTitle {
+		font-size: 24px;
+	}
+
+	.errorActions {
+		flex-direction: column;
+	}
+
+	.reloadButton,
+	.homeButton {
+		width: 100%;
+	}
+}
