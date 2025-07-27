@@ -1,69 +1,45 @@
-# React + TypeScript + Vite
+# Shest Movie
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+**Shest Movie** — это современное десктоп-приложение для просмотра фильмов и сериалов из локальных папок на вашем компьютере. Приложение автоматически определяет структуру ваших видеофайлов, поддерживает предпросмотр, навигацию по папкам и удобный просмотр с любого эпизода.
 
-Currently, two official plugins are available:
+## Возможности
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- Быстрый просмотр фильмов и сериалов из локальных папок
+- Автоматическое определение структуры: фильмы, сериалы, сезоны, эпизоды
+- Предпросмотр обложек и информации о фильме/сериале (из markdown)
+- Хлебные крошки для навигации по папкам
+- Кнопка "Смотреть с 1 серии" для сериалов и "Смотреть" для фильмов
+- Открытие видео во внешнем плеере
+- Современный и дружелюбный интерфейс
 
-## Expanding the ESLint configuration
+## Как пользоваться
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+1. **Запустите приложение**
+2. В верхней части экрана нажмите кнопку **"Выбрать папку"**
+3. Укажите папку, в которой хранятся ваши фильмы или сериалы
+4. Приложение автоматически покажет список доступных видео и папок
+5. Для сериалов:
+   - Нажмите "Смотреть с 1 серии" — откроется первый эпизод
+   - Навигируйте по сезонам и эпизодам через папки
+6. Для фильмов:
+   - Нажмите "Смотреть" — откроется первый видеофайл в папке
+   - Вложенные папки и лишние видео не отображаются
+7. Используйте хлебные крошки для быстрой навигации по структуре папок
+8. Для каждого фильма/сериала отображается подробная информация (жанр, год, рейтинг и др.)
 
-```js
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## Запуск (для разработчиков)
 
-      // Remove tseslint.configs.recommended and replace with this
-      ...tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      ...tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      ...tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm install
+npm run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Примечания
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+- Приложение не требует интернета для просмотра локальных файлов
+- Для корректного отображения информации рекомендуется хранить в папках markdown-файлы с описанием
+- Все видео открываются во внешнем плеере вашей системы
 
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+---
+
+**Shest Movie** — ваш быстрый и удобный способ смотреть локальные фильмы и сериалы!
