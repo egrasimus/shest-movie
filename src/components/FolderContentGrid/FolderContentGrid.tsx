@@ -2,6 +2,7 @@ import React from "react"
 import styles from "./FolderContentGrid.module.scss"
 import VideoCard from "./VideoCard"
 import FolderCard from "./FolderCard"
+import electronApi from "../../services/electronApi"
 
 interface Props {
 	folderPath: string
@@ -43,9 +44,7 @@ const FolderContentGrid: React.FC<Props> = ({
 					) : (
 						<VideoCard
 							entry={entry}
-							onClick={() =>
-								window.electronAPI.openExternalVideo(entry.fullPath)
-							}
+							onClick={() => electronApi.openExternalVideo(entry.fullPath)}
 						/>
 					)}
 				</React.Fragment>

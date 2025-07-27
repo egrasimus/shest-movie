@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react"
+import electronApi from "../services/electronApi"
 
 interface UseFolderContentResult {
 	videos: string[]
@@ -24,8 +25,8 @@ function useFolderContent(folderPath: string | null): UseFolderContentResult {
 		setLoading(true)
 		setError(null)
 		Promise.all([
-			window.electronAPI.getVideos(folderPath),
-			window.electronAPI.getSubfolders(folderPath),
+			electronApi.getVideos(folderPath),
+			electronApi.getSubfolders(folderPath),
 		])
 			.then(([videos, subfolders]) => {
 				setVideos(videos)

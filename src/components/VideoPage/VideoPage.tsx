@@ -7,6 +7,7 @@ import { createOpenFolderDialogHandler } from "../../handlers/videoPageHandlers"
 import { useMovieData } from "../../hooks/useMovieData"
 import MoviePage from "../MoviePage/MoviePage"
 import BreadcrumbsBar from "./BreadcrumbsBar"
+import electronApi from "../../services/electronApi"
 
 interface FileEntry {
 	type: "video" | "folder"
@@ -37,14 +38,14 @@ const VideoPage: React.FC = () => {
 	const onPlayFirstEpisode = useCallback(async (path: string) => {
 		// Если это видео — открыть
 		if (path.match(/\.(mp4|mkv|avi|mov|webm)$/i)) {
-			window.electronAPI.openExternalVideo(path)
+			electronApi.openExternalVideo(path)
 			return
 		}
 		// Если это папка — загрузить видео и открыть первое
-		const videos = await window.electronAPI.getVideos(path)
+		const videos = await electronApi.getVideos(path)
 		if (videos && videos.length > 0) {
 			const firstVideoPath = `${path}/${videos[0]}`
-			window.electronAPI.openExternalVideo(firstVideoPath)
+			electronApi.openExternalVideo(firstVideoPath)
 		}
 	}, [])
 
@@ -66,8 +67,8 @@ const VideoPage: React.FC = () => {
 					const fullPath = `${folderPath}/${name}`
 					let preview: string | undefined
 					try {
-						preview = await window.electronAPI.getFolderPreview(fullPath)
-					} catch (e) {
+						preview = await electronApi.getFolderPreview(fullPath)
+					} catch {
 						preview = undefined
 					}
 					return {
@@ -83,12 +84,12 @@ const VideoPage: React.FC = () => {
 					const fullPath = `${folderPath}/${file}`
 					let preview: string | undefined
 					try {
-						const previewPath = await window.electronAPI.getPreview(fullPath)
+						const previewPath = await electronApi.getPreview(fullPath)
 						preview = previewPath
 						if (previewPath) {
-							preview = await window.electronAPI.loadPreview(previewPath)
+							preview = await electronApi.loadPreview(previewPath)
 						}
-					} catch (e) {
+					} catch {
 						preview = undefined
 					}
 					return {
