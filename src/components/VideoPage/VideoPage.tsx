@@ -68,7 +68,8 @@ const VideoPage: React.FC = () => {
 					const fullPath = `${folderPath}/${name}`
 					let preview: string | undefined
 					try {
-						preview = await electronApi.getFolderPreview(fullPath)
+						preview =
+							(await electronApi.getFolderPreview(fullPath)) ?? undefined
 					} catch {
 						preview = undefined
 					}
@@ -86,9 +87,10 @@ const VideoPage: React.FC = () => {
 					let preview: string | undefined
 					try {
 						const previewPath = await electronApi.getPreview(fullPath)
-						preview = previewPath
+						preview = previewPath ?? undefined
 						if (previewPath) {
-							preview = await electronApi.loadPreview(previewPath)
+							const loaded = await electronApi.loadPreview(previewPath)
+							preview = loaded ?? undefined
 						}
 					} catch {
 						preview = undefined
