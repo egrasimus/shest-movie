@@ -1,4 +1,5 @@
 import React from "react"
+import Button from "../ui/Button/Button"
 
 interface BreadcrumbsBarProps {
 	folderPath: string | null
@@ -60,9 +61,7 @@ const BreadcrumbsBar: React.FC<BreadcrumbsBarProps> = ({
 				<div></div>
 			)}
 			<div className={styles.controls}>
-				<button className={styles.selectButton} onClick={openFolderDialog}>
-					Выбрать папку
-				</button>
+				<Button onClick={openFolderDialog}>Выбрать папку</Button>
 			</div>
 		</div>
 	</div>

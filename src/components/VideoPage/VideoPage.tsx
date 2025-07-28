@@ -8,6 +8,7 @@ import { useMovieData } from "../../hooks/useMovieData"
 import MoviePage from "../MoviePage/MoviePage"
 import BreadcrumbsBar from "./BreadcrumbsBar"
 import electronApi from "../../services/electronApi"
+import Button from "../ui/Button/Button"
 
 interface FileEntry {
 	type: "video" | "folder"
@@ -127,9 +128,7 @@ const VideoPage: React.FC = () => {
 					<p className={styles.placeholderText}>
 						Выберите папку с видео, чтобы начать просмотр.
 					</p>
-					<button className={styles.selectButton} onClick={openFolderDialog}>
-						Выбрать папку
-					</button>
+					<Button onClick={openFolderDialog}>Выбрать папку</Button>
 				</div>
 			)}
 

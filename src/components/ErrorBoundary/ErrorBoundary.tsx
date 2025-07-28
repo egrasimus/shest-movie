@@ -1,6 +1,7 @@
 import React, { Component } from "react"
 import type { ErrorInfo, ReactNode } from "react"
 import styles from "./ErrorBoundary.module.scss"
+import Button from "../ui/Button/Button"
 
 interface Props {
 	children: ReactNode
@@ -66,15 +67,15 @@ class ErrorBoundary extends Component<Props, State> {
 						)}
 
 						<div className={styles.errorActions}>
-							<button
+							<Button
 								className={styles.reloadButton}
 								onClick={this.handleReload}
 							>
 								Перезагрузить приложение
-							</button>
-							<button className={styles.homeButton} onClick={this.handleGoHome}>
+							</Button>
+							<Button className={styles.homeButton} onClick={this.handleGoHome}>
 								Вернуться к началу
-							</button>
+							</Button>
 						</div>
 					</div>
 				</div>
